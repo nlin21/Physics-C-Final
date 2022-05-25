@@ -1,7 +1,7 @@
 class Mass {
 
   PVector position, velocity, acceleration;
-  PVector r, F, torque;
+  PVector angularA, gravity;
   float theta;
 
   Mass next, previous;
@@ -10,8 +10,8 @@ class Mass {
     position = new PVector(x, y);
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
-    r = new PVector(0, 0);
-    F = new PVector(0, MASS * GRAVITY);
+    angularA = new PVector(0, 0);
+    gravity = new PVector(0, MASS * GRAVITY);
     next = null;
     previous = null;
   }
@@ -38,8 +38,9 @@ class Mass {
   }
 
   void calculateVector(Mass other) {
-    r.set(PVector.sub(position, other.position));
     theta = HALF_PI - PVector.sub(position, other.position).heading();
-   
+    angularA = PVector.fromAngle(PVector.sub(position, other.position).heading() + HALF_PI);
+    angularA.setMag(GRAVITY / LENGTH * sin(theta));
+    applyVector(angularA);
   }
 }
