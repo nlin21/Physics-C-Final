@@ -1,46 +1,38 @@
 class Mass {
 
-  PVector position, velocity, acceleration;
-  PVector angularA, gravity;
-  float theta;
-
+  int x, y;
+  float theta, alpha, omega;
+  
   Mass next, previous;
 
   Mass(int x, int y) {
-    position = new PVector(x, y);
-    velocity = new PVector(0, 0);
-    acceleration = new PVector(0, 0);
-    angularA = new PVector(0, 0);
-    gravity = new PVector(0, MASS * GRAVITY);
+    this.x = x;
+    this.y = y;
+    theta = PI/3;
+    alpha = 0;
+    omega = 0;
     next = null;
     previous = null;
   }
 
   void display() {
-    circle(position.x, position.y, MASS);
+    circle(x, y, MASS);
     stroke(0);
     if (next != null) {
-      line(position.x, position.y, next.position.x, next.position.y);
-    }
+      line(x, y, next.x, next.y);
+    } 
     if (previous != null) {
-      line(position.x, position.y, previous.position.x, previous.position.y);
+      line(x, y, previous.x, previous.y);
     }
   }
 
-  void run() {
-    velocity.add(acceleration);
-    position.add(velocity);
-    acceleration.set(0, 0);
+  void calculatePosition(Mass origin) {
+    alpha = -1 * GRAVITY / LENGTH * sin(theta);
+    omega += alpha;
+    theta += omega;
+    
+    x = (int)(LENGTH * cos(theta * -1 + PI/2)) + origin.x;
+    y = (int)(LENGTH * sin(theta * -1 + PI/2)) + origin.y;
   }
-
-  void applyVector(PVector vector) {
-    acceleration.add(vector);
-  }
-
-  void calculateVector(Mass other) {
-    theta = HALF_PI - PVector.sub(position, other.position).heading();
-    angularA = PVector.fromAngle(PVector.sub(position, other.position).heading() + HALF_PI);
-    angularA.setMag(GRAVITY / LENGTH * sin(theta));
-    applyVector(angularA);
-  }
+  
 }
