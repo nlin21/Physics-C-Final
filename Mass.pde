@@ -1,5 +1,5 @@
-float theta1, alpha1, omega1;
-float theta2, alpha2, omega2;
+float theta1, omega1, alpha1;
+float theta2, omega2, alpha2;
   
 class Mass {
 
@@ -11,14 +11,11 @@ class Mass {
     this.x = x;
     this.y = y;
     this.mass = mass;
-    theta1 = PI/2;
-    theta2 = PI/3;
     next = null;
     previous = null;
   }
 
   void display() {
-    circle(x, y, mass);
     stroke(0);
     if (next != null) {
       line(x, y, next.x, next.y);
@@ -26,6 +23,7 @@ class Mass {
     if (previous != null) {
       line(x, y, previous.x, previous.y);
     }
+    circle(x, y, mass);
   }
 
   void calculatePosition1(Mass origin) {
