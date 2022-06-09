@@ -1,3 +1,4 @@
+float theta0, omega0, alpha0;
 float theta1, omega1, alpha1;
 float theta2, omega2, alpha2;
   
@@ -25,6 +26,16 @@ class Mass {
     }
     circle(x, y, mass);
   }
+  
+  void calculatePosition0(Mass origin) {
+    alpha0 = - GRAVITY / LENGTH1 * sin(theta0);
+    omega0 += alpha0;
+    omega0 *= DAMP;
+    theta0 += omega0;
+    
+    x = int(origin.x + LENGTH1 * sin(theta0));
+    y = int(origin.y + LENGTH1 * cos(theta0));
+  }
 
   void calculatePosition1(Mass origin) {
     float term1 = - GRAVITY * (2 * MASS1 + MASS2) * sin(theta1);
@@ -34,6 +45,7 @@ class Mass {
     float term5 = LENGTH1 * (2 * MASS1 + MASS2 - MASS2 * cos(2 * theta1 - 2 * theta2));
     alpha1 = (term1 + term2 + term3 * term4) / term5;
     omega1 += alpha1;
+    omega1 *= DAMP;
     theta1 += omega1;
     
     x = int(origin.x + LENGTH1 * sin(theta1));
@@ -48,6 +60,7 @@ class Mass {
     float term5 = LENGTH2 * (2 * MASS1 + MASS2 - MASS2 * cos(2 * theta1 - 2 * theta2));
     alpha2 = (term1 * (term2 + term3 + term4)) / term5;
     omega2 += alpha2;
+    omega2 *= DAMP;
     theta2 += omega2;
     
     x = int(m1.x + LENGTH2 * sin(theta2));
