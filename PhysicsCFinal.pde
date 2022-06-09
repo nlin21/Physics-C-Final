@@ -1,8 +1,13 @@
 import controlP5.*;
+import grafica.*;
 
 ControlP5 cp5;
 RadioButton r;
 float r_prev = 1.0;
+
+GPlot plot;
+GPointsArray points;
+int nPoints = 100;
 
 boolean moving;
 
@@ -20,13 +25,19 @@ Mass m0, m1, m2;
 void setup() {
   size(1000, 920);
   cp5 = new ControlP5(this);
-  
+  plot = new GPlot(this);
+  points = new GPointsArray(nPoints);
+  plot.setPos(500,550);
+  plot.setTitleText("Phase Space Diagram");
+  plot.getXAxis().setAxisLabelText("Theta");
+  plot.getYAxis().setAxisLabelText("Angular Momentum");
+
   LENGTH1 = 150;
   LENGTH2 = 150;
   MASS1 = 30;
   MASS2 = 30;
   GRAVITY = 0.5;
-  DAMP = 0.99;
+  DAMP = 1.00;
   theta0 = PI/2;
   omega0 = 0;
   alpha0 = 0;
@@ -59,6 +70,10 @@ void draw() {
   text(Gravity, 100, 790);
   text(Damp, 100, 860);
   line(0, 500, 1000, 500);
+  
+  points.add(theta0, MASS1 * LENGTH1 * LENGTH1 * omega0);
+  plot.setPoints(points);
+  plot.defaultDraw();
   
   if (r_prev != r.getValue()) {
     theta0 = PI/2;
