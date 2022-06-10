@@ -1,5 +1,6 @@
 # PhysicsCFinal
-Final project for Physics C class
+Final project for Physics C class - Matthew Weng, Nicky Lin pd. 1
+
 https://github.com/nlin21/PhysicsCFinal
 
 This is an interactive simulation of one-bob pendulum and two-bob pendulum systems.
