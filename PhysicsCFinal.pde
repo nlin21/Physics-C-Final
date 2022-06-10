@@ -2,7 +2,13 @@ import controlP5.*;
 import grafica.*;
 
 ControlP5 cp5;
-RadioButton r;
+RadioButton r_angles1;
+RadioButton r_angles2;
+RadioButton r_bobs;
+float starting_angle1 = PI/2;
+float starting_angle2 = PI/3;
+float r_angles1_prev = 1.0;
+float r_angles2_prev = 1.0;
 float r_prev = 1.0;
 
 GPlot plot;
@@ -11,6 +17,7 @@ int nPoints = 100;
 
 boolean moving;
 
+String Angles = "Starting Angles: (Left for First Bob Angle, Right for Second Bob Angle)";
 String Number = "Number of Pendulum Bobs:";
 String Length = "Length of Pendulum:";
 String Mass = "Mass of Pendulum:";
@@ -23,11 +30,13 @@ float GRAVITY, DAMP;
 Mass m0, m1, m2;
 
 void setup() {
-  size(1000, 920);
+  size(1000, 1000);
+  
   cp5 = new ControlP5(this);
+  
   plot = new GPlot(this);
   points = new GPointsArray(nPoints);
-  plot.setPos(475,550);
+  plot.setPos(490,650);
   plot.setTitleText("Phase Space Diagram");
   plot.getXAxis().setAxisLabelText("Theta");
   plot.getYAxis().setAxisLabelText("Angular Momentum");
@@ -38,13 +47,13 @@ void setup() {
   MASS2 = 30;
   GRAVITY = 0.5;
   DAMP = 1.00;
-  theta0 = PI/2;
+  theta0 = starting_angle1;
   omega0 = 0;
   alpha0 = 0;
-  theta1 = PI/2;
+  theta1 = starting_angle1;
   omega1 = 0;
   alpha1 = 0;
-  theta2 = PI/3;
+  theta2 = starting_angle2;
   omega2 = 0;
   alpha2 = 0;
   
@@ -56,7 +65,9 @@ void setup() {
 
   moving = false;
   addSliders();
-  r.activate(0);
+  r_angles1.activate(0);
+  r_angles2.activate(1);
+  r_bobs.activate(0);
 }
 
 void draw() {
@@ -64,38 +75,94 @@ void draw() {
   
   //Sliders
   textSize(18);
-  text(Number, 100, 530);
-  text(Length, 100, 590);  
-  text(Mass, 100, 690);
-  text(Gravity, 100, 790);
-  text(Damp, 100, 860);
-  line(0, 500, 1000, 500);
+  text(Angles, 100, 550);
+  text(Number, 100, 610);
+  text(Length, 100, 670);  
+  text(Mass, 100, 770);
+  text(Gravity, 100, 870);
+  text(Damp, 100, 940);
+  line(0, 520, 1000, 520);
   
-  if (r_prev != r.getValue()) {
-    theta0 = PI/2;
+  if (r_angles1_prev != r_angles1.getValue()) {
+    switch (int(r_angles1.getValue())) {
+      case 1:
+        starting_angle1 = PI/2;
+        break;
+      case 2:
+        starting_angle1 = PI/3;
+        break;
+      case 3:
+        starting_angle1 = PI/4;
+        break;
+      case 4:
+        starting_angle1 = PI/6;
+        break;
+      case 5:
+        starting_angle1 = 0;
+        break;
+    }
+    theta0 = starting_angle1;
     omega0 = 0;
     alpha0 = 0;
-    theta1 = PI/2;
+    theta1 = starting_angle1;
     omega1 = 0;
     alpha1 = 0;
-    theta2 = PI/3;
+    points = new GPointsArray(nPoints);    
+  }
+
+  if (r_angles2_prev != r_angles2.getValue()) {
+    switch (int(r_angles2.getValue())) {
+      case 1:
+        starting_angle2 = PI/2;
+        break;
+      case 2:
+        starting_angle2 = PI/3;
+        break;
+      case 3:
+        starting_angle2 = PI/4;
+        break;
+      case 4:
+        starting_angle2 = PI/6;
+        break;
+      case 5:
+        starting_angle2 = 0;
+        break;
+    }
+    theta0 = starting_angle1;
+    omega0 = 0;
+    alpha0 = 0;
+    theta1 = starting_angle1;
+    omega1 = 0;
+    alpha1 = 0;
+    theta2 = starting_angle2;
     omega2 = 0;
     alpha2 = 0;
     points = new GPointsArray(nPoints);
   }
   
-  if (r.getValue() == 1.0) {
-    points.add(theta0, MASS1 * LENGTH1 * LENGTH1 * omega0);
-    plot.setPoints(points);
-    plot.defaultDraw();
-  }
-  if (r.getValue() == 2.0) {
-    points.add(theta2, MASS2 * LENGTH2 * LENGTH2 * omega2);
-    plot.setPoints(points);
-    plot.defaultDraw();
+  if (r_prev != r_bobs.getValue()) {
+    theta0 = starting_angle1;
+    omega0 = 0;
+    alpha0 = 0;
+    theta1 = starting_angle1;
+    omega1 = 0;
+    alpha1 = 0;
+    theta2 = starting_angle2;
+    omega2 = 0;
+    alpha2 = 0;
+    points = new GPointsArray(nPoints);
   }
   
-  if (r.getValue() == 1.0) {
+  if (r_bobs.getValue() == 1.0 && moving) {
+    points.add(theta0, MASS1 * LENGTH1 * LENGTH1 * omega0);
+  }
+  if (r_bobs.getValue() == 2.0 && moving) {
+    points.add(theta2, MASS2 * LENGTH2 * LENGTH2 * omega2);
+  }
+  plot.setPoints(points);
+  plot.defaultDraw();
+  
+  if (r_bobs.getValue() == 1.0) {
     m0.next = m1;
     m1.previous = m0;
     m1.next = null;
@@ -108,7 +175,7 @@ void draw() {
     m1.display();
   }
   
-  if (r.getValue() == 2.0) {
+  if (r_bobs.getValue() == 2.0) {
     m0.next = m1;
     m1.previous = m0;
     m1.next = m2;
@@ -127,13 +194,45 @@ void draw() {
     m2.display();
   }
   
-  r_prev = r.getValue();
+  r_angles1_prev = r_angles1.getValue();
+  r_angles2_prev = r_angles2.getValue();
+  r_prev = r_bobs.getValue();
 }
 
 void addSliders() {
-  r = 
-  cp5.addRadioButton("radioButton")
-    .setPosition(100,540)
+  r_angles1 = 
+  cp5.addRadioButton("angles1")
+    .setPosition(100,560)
+    .setSize(30,10)
+    .setColorForeground(color(120))
+    .setColorActive(color(255))
+    .setColorLabel(color(255))
+    .setItemsPerRow(5)
+    .setSpacingColumn(50)
+    .addItem("1 : PI/2",1)
+    .addItem("1 : PI/3",2)
+    .addItem("1 : PI/4",3)
+    .addItem("1 : PI/6",4)
+    .addItem("1 : 0",5);
+
+  r_angles2 = 
+  cp5.addRadioButton("angles2")
+    .setPosition(575,560)
+    .setSize(30,10)
+    .setColorForeground(color(120))
+    .setColorActive(color(255))
+    .setColorLabel(color(255))
+    .setItemsPerRow(5)
+    .setSpacingColumn(50)
+    .addItem("2 : PI/2",1)
+    .addItem("2 : PI/3",2)
+    .addItem("2 : PI/4",3)
+    .addItem("2 : PI/6",4)
+    .addItem("2 : 0",5);
+  
+  r_bobs = 
+  cp5.addRadioButton("bobs")
+    .setPosition(100,620)
     .setSize(30,10)
     .setColorForeground(color(120))
     .setColorActive(color(255))
@@ -145,7 +244,7 @@ void addSliders() {
          
   cp5.addSlider("LENGTH1")
     .setBroadcast(false)
-    .setPosition(100,600)
+    .setPosition(100,680)
     .setSize(300,20)
     .setRange(25,200)
     .setValue(LENGTH1)
@@ -154,7 +253,7 @@ void addSliders() {
   
   cp5.addSlider("LENGTH2")
     .setBroadcast(false)
-    .setPosition(100,630)
+    .setPosition(100,710)
     .setSize(300,20)
     .setRange(25,200)
     .setValue(LENGTH2)
@@ -163,7 +262,7 @@ void addSliders() {
 
   cp5.addSlider("MASS1")
     .setBroadcast(false)
-    .setPosition(100,700)
+    .setPosition(100,780)
     .setSize(300,20)
     .setRange(10,50)
     .setValue(MASS1)
@@ -172,7 +271,7 @@ void addSliders() {
 
   cp5.addSlider("MASS2")
     .setBroadcast(false)
-    .setPosition(100,730)
+    .setPosition(100,810)
     .setSize(300,20)
     .setRange(10,50)
     .setValue(MASS2)
@@ -181,7 +280,7 @@ void addSliders() {
 
   cp5.addSlider("GRAVITY")
     .setBroadcast(false)
-    .setPosition(100,800)
+    .setPosition(100,880)
     .setSize(300,20)
     .setRange(0.25,1.00)
     .setValue(GRAVITY)
@@ -190,7 +289,7 @@ void addSliders() {
   
   cp5.addSlider("DAMP")
     .setBroadcast(false)
-    .setPosition(100,870)
+    .setPosition(100,950)
     .setSize(300,20)
     .setRange(0.95,1.00)
     .setValue(DAMP)
