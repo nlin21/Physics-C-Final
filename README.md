@@ -3,7 +3,7 @@ Final project for Physics C class - Matthew Weng, Nicky Lin pd. 1
 
 https://github.com/nlin21/PhysicsCFinal
 
-This is an interactive simulation of one-bob pendulum and two-bob pendulum systems.
+This is an interactive simulation of one-bob pendulum and two-bob pendulum systems. A phase space diagram is also drawn as the pendulum(s) swing.
 
 The following variables can be changed (along with their ranges):
 - Starting angle of pendulum bobs (PI/2-0 radians)
@@ -13,7 +13,7 @@ The following variables can be changed (along with their ranges):
 - Gravity (0.5-1.0, higher means stronger gravity)
 - Dampening (0.95-1.00, higher means less dampening)
 
-A phase space diagram is also drawn as the pendulum(s) swing.
+The simulation can be paused/unpaused with the spacebar, and reset by hitting the 'r' key.
 
 Simple Pendulum system:
 <br/>
