@@ -27,7 +27,7 @@ void setup() {
   cp5 = new ControlP5(this);
   plot = new GPlot(this);
   points = new GPointsArray(nPoints);
-  plot.setPos(500,550);
+  plot.setPos(475,550);
   plot.setTitleText("Phase Space Diagram");
   plot.getXAxis().setAxisLabelText("Theta");
   plot.getYAxis().setAxisLabelText("Angular Momentum");
@@ -71,10 +71,6 @@ void draw() {
   text(Damp, 100, 860);
   line(0, 500, 1000, 500);
   
-  points.add(theta0, MASS1 * LENGTH1 * LENGTH1 * omega0);
-  plot.setPoints(points);
-  plot.defaultDraw();
-  
   if (r_prev != r.getValue()) {
     theta0 = PI/2;
     omega0 = 0;
@@ -85,6 +81,18 @@ void draw() {
     theta2 = PI/3;
     omega2 = 0;
     alpha2 = 0;
+    points = new GPointsArray(nPoints);
+  }
+  
+  if (r.getValue() == 1.0) {
+    points.add(theta0, MASS1 * LENGTH1 * LENGTH1 * omega0);
+    plot.setPoints(points);
+    plot.defaultDraw();
+  }
+  if (r.getValue() == 2.0) {
+    points.add(theta2, MASS2 * LENGTH2 * LENGTH2 * omega2);
+    plot.setPoints(points);
+    plot.defaultDraw();
   }
   
   if (r.getValue() == 1.0) {
