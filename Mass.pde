@@ -25,6 +25,19 @@ class Mass {
       line(x, y, previous.x, previous.y);
     }
     circle(x, y, mass);
+    if (r_faces.getValue() == 1.0) {
+      imageMode(CENTER);
+      if (mass >= 10 && mass < 20) {
+        image(nicky, x, y);
+      }
+      if (mass >= 20 && mass < 30) {
+        image(brandon, x, y);
+      }
+      if (mass >= 30 && mass <= 50) {
+        image(matthew, x, y);
+      }
+    }
+
   }
   
   void calculatePosition0(Mass origin) {

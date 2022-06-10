@@ -5,6 +5,7 @@ ControlP5 cp5;
 RadioButton r_angles1;
 RadioButton r_angles2;
 RadioButton r_bobs;
+RadioButton r_faces;
 float starting_angle1 = PI/2;
 float starting_angle2 = PI/3;
 float r_angles1_prev = 1.0;
@@ -14,6 +15,8 @@ float r_prev = 1.0;
 GPlot plot;
 GPointsArray points;
 int nPoints = 100;
+
+PImage nicky, brandon, matthew;
 
 boolean moving;
 
@@ -40,6 +43,10 @@ void setup() {
   plot.setTitleText("Phase Space Diagram");
   plot.getXAxis().setAxisLabelText("Theta");
   plot.getYAxis().setAxisLabelText("Angular Momentum");
+
+  nicky = loadImage("assets/nicky.png");
+  brandon = loadImage("assets/brandon.png");
+  matthew = loadImage("assets/matthew.png");
 
   LENGTH1 = 150;
   LENGTH2 = 150;
@@ -169,6 +176,7 @@ void draw() {
     m2.previous = null;
     m1.x = int(m0.x + LENGTH1 * sin(theta0));
     m1.y = int(m0.y + LENGTH1 * cos(theta0));
+    m1.mass = MASS1;
     if (moving) {
       m1.calculatePosition0(m0);
     }
@@ -295,7 +303,19 @@ void addSliders() {
     .setValue(DAMP)
     .setSliderMode(Slider.FLEXIBLE)
     .setBroadcast(true);
+  
+  r_faces =
+  cp5.addRadioButton("faces")
+    .setPosition(100,100)
+    .setSize(20,20)
+    .setColorForeground(color(120))
+    .setColorActive(color(255))
+    .setColorLabel(color(255))
+    .setItemsPerRow(1)
+    .setSpacingColumn(50)
+    .addItem("SURPRISE",1);
 }
+
 
 void keyPressed() {
   if (key == ' ') {
